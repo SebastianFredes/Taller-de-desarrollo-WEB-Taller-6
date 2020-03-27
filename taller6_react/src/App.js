@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useState , useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios'
 import MaterialDatatable from "material-datatable";
 
 export default function App() {
   const { register, handleSubmit, errors } = useForm();
+  const [items, setItems] = useState([]);
+  
   const onSubmit = data =>{
     console.log(data);
     
@@ -15,24 +17,24 @@ export default function App() {
 
     })
 
-  } 
-
+  }
+    
   const cargar = () =>{
 
     axios.get('http://localhost:8000/personas')
     .then(res=>{
+      setItems(res.data.personas);
       console.log("Todas las personas")
-      console.log(res)
+      console.log(res.data.personas)
     })
   }
 
   useEffect(()=>{
     cargar();
-  })
+  },[])
 
   console.log(errors);
 
-  //   TAREA TALLER 6     //
   const columns = [
     {   
         name: 'Nombre', 
@@ -50,17 +52,6 @@ export default function App() {
     },
 ];
 
-const data = [ 
-
-
-
-
-  
-  //{nombre: "AHHHHHHHHh", apellido: "Title 1"},
-  //{nombre: "Name 2", apellido: "Title 2"},
-];
-
-
 const options = {
     filterType: 'checkbox',
 };
@@ -74,7 +65,7 @@ const options = {
       <div style={{ maxWidth: '90%' }}>
           <MaterialDatatable
           title={"PERSONAS"}
-          data={data}
+          data={items}
           columns={columns}
           options={options}
         />
@@ -82,7 +73,6 @@ const options = {
     
     </form>
     
-
   );
 
 }
